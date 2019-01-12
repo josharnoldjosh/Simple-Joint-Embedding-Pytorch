@@ -137,7 +137,7 @@ class Loader(object):
 		# Create a 3D matrix
 		x = len(sequences)
 		y = max([len(i) for i in sequences])
-		y = max([len(j) for i in sequences for j in i])
+		#y = max([len(j) for i in sequences for j in i])
 		z = config["sentence_embedding_size"]
 
 		processed_captions = numpy.zeros((x, y, z)).astype('int64')		
