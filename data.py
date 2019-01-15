@@ -120,6 +120,9 @@ class Loader(object):
 		"""
 		Prepares the captions and image features to go directly into the model.
 		"""
+
+		# [ [ [1 0 1 0 1], [0 0 0 0 0 0 0 0 ] ], ]
+
 		def get_seq(caption): 
 			seq = [self.word_to_index[word] if word in self.word_to_index.keys() else 1 for word in caption.split()]       	
 			seq.insert(0, self.word_to_index["<sos>"])

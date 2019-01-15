@@ -2,6 +2,8 @@ import torch
 import torch.nn.functional as F
 from settings import config
 
+from time_dist import SentenceEmbedding
+
 class Model(torch.nn.Module):
 	"""
 	The model class for the joint embedding.
@@ -23,6 +25,8 @@ class Model(torch.nn.Module):
 		# caption neural networks
 		self.lstm = torch.nn.LSTM(config['sentence_embedding_size'], config['lstm_hidden_size'], 1, batch_first=True)
 		self.caption_linear = torch.nn.Linear(config['lstm_hidden_size'], config["joint_embedding_latent_space_dimension"])
+
+		self.sentence_pass = SentenceEmbedding()
 
 		# image feature neural networks
 		self.image_feature_linear = torch.nn.Linear(config['image_dimension'], config['joint_embedding_latent_space_dimension'])
@@ -60,12 +64,13 @@ class Model(torch.nn.Module):
 		"""
 		Pass captions through model.		
 		"""
-		sentence_embedding = captions.float()
-		_, (sentence_embedding, _) = self.lstm(sentence_embedding)
-		x_sentence_embedding = sentence_embedding.squeeze(0)
-		x_sentence_embedding = self.caption_linear(x_sentence_embedding)	
-		norm_x_sentence_embedding =  F.normalize(x_sentence_embedding, p=2, dim=1)	
-		return norm_x_sentence_embedding
+		return self.sentence_pass(captions)
+		# sentence_embedding = captions.float()
+		# _, (sentence_embedding, _) = self.lstm(sentence_embedding)		
+		# x_sentence_embedding = sentence_embedding.squeeze(0)		
+		# x_sentence_embedding = self.caption_linear(x_sentence_embedding)	
+		# norm_x_sentence_embedding =  F.normalize(x_sentence_embedding, p=2, dim=1)	
+		# return norm_x_sentence_embedding
 
 	def forward_image(self, image):
 		"""

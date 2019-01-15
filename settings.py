@@ -15,5 +15,9 @@ config = {
 	"sentence_embedding_size":64, # the maximum number of words in a sentence to be embedded into a vector
 	"lstm_hidden_size":1000, # the output vector size of the LSTM hidden layer
 	"joint_embedding_latent_space_dimension":1000, # the dimension size of the latent space of our embedding
-	"margin_pairwise_ranking_loss":0.2 # factor for the pairwise ranking loss function
+	"margin_pairwise_ranking_loss":0.2, # factor for the pairwise ranking loss function
+
+	# time distributed
+	"linear_hidden":1000,
+	"lstm_depth":1
 }	
