@@ -64,13 +64,13 @@ class Model(torch.nn.Module):
 		"""
 		Pass captions through model.		
 		"""
-		return self.sentence_pass(captions)
-		# sentence_embedding = captions.float()
-		# _, (sentence_embedding, _) = self.lstm(sentence_embedding)		
-		# x_sentence_embedding = sentence_embedding.squeeze(0)		
-		# x_sentence_embedding = self.caption_linear(x_sentence_embedding)	
-		# norm_x_sentence_embedding =  F.normalize(x_sentence_embedding, p=2, dim=1)	
-		# return norm_x_sentence_embedding
+		#return self.sentence_pass(captions)
+		sentence_embedding = captions.float()
+		_, (sentence_embedding, _) = self.lstm(sentence_embedding)		
+		x_sentence_embedding = sentence_embedding.squeeze(0)		
+		x_sentence_embedding = self.caption_linear(x_sentence_embedding)	
+		norm_x_sentence_embedding =  F.normalize(x_sentence_embedding, p=2, dim=1)	
+		return norm_x_sentence_embedding
 
 	def forward_image(self, image):
 		"""

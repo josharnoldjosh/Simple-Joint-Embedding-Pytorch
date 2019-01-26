@@ -40,8 +40,8 @@ def evaluate_model():
 
 		# evaluate text to image score
 		text_to_image.append(evaluate.text_to_image(captions, image_features))
-		image_to_text.append(evaluate.image_to_text(captions, image_features))
-
+		image_to_text.append(evaluate.image_to_text(captions, image_features))	
+	
 	# retreive score
 	score = evaluate.recall_score(text_to_image, image_to_text)
 
@@ -73,6 +73,9 @@ def train_model():
 		evaluate_model()
 
 if __name__ == '__main__':
+	train_model()
+	evaluate_model()
+	print("\n[DONE] Script complete.")
 	train_model()
 	evaluate_model()
 	print("\n[DONE] Script complete.")

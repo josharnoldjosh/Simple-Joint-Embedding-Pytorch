@@ -5,9 +5,9 @@ config = {
 	"image_dimension":512, # the size of the image feature vectors loaded as an input, e.g, 512 for Resnet
 
 	# training parameters
-	"num_epochs":100, # number of epochs to train on
+	"num_epochs":75, # number of epochs to train on
 	"batch_size":64, # the number of elements per batch	
-	"learning_rate":0.00001, # learning rate for gradient descent
+	"learning_rate":0.0001, # learning rate for gradient descent
 	"grad_clip":2.0, # clip the gradient during gradient descent
 	"display_freq":20, # display the loss every x amount of times
 

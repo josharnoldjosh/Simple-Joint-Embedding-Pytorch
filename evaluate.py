@@ -1,5 +1,6 @@
 import numpy
 import torch
+from scipy import spatial
 
 def recall_score(text_to_image, image_to_text):
     """
@@ -58,30 +59,18 @@ def image_to_text(captions, images, npts=None):
 
     return r1+r5+r10, (r1, r5, r10, medr)
 
-def text_to_image(captions, images, npts=None):
-    if npts == None:
-    	npts = images.size()[0] / 5
-    	npts = int(npts)
-
-    ims = torch.cat([images[i].unsqueeze(0) for i in range(0, len(images), 5)])
-
-    ranks = numpy.zeros(5 * npts)
-    for index in range(npts):
-
-        # Get query captions
-        queries = captions[5*index : 5*index + 5]
-
-        # Compute scores
-        d = torch.mm(queries, ims.t())
-        for i in range(d.size()[0]):
-            d_sorted, inds = torch.sort(d[i], descending=True)
-            inds = inds.data.squeeze(0).cpu().numpy()
-            ranks[5 * index + i] = numpy.where(inds == index)[0][0]
-
+def text_to_image(sentence_embs, img_embs):    
+    scores = torch.mm(sentence_embs, img_embs.t())
+    gt_score = scores.diag()
+    count = scores.gt(gt_score.view(-1,1).expand_as(scores))
+    ranks = count.sum(1) + 1 
+    ranks = ranks.cpu().numpy()
+    
     # Compute metrics
-    r1 = 100.0 * len(numpy.where(ranks < 1)[0]) / len(ranks)
-    r5 = 100.0 * len(numpy.where(ranks < 5)[0]) / len(ranks)
-    r10 = 100.0 * len(numpy.where(ranks < 10)[0]) / len(ranks)
-    medr = numpy.floor(numpy.median(ranks)) + 1
-
-    return r1+r5+r10, (r1, r5, r10, medr)
+    r1 = 100.0 * len(numpy.where(ranks < 2)[0]) / len(ranks)
+    r5 = 100.0 * len(numpy.where(ranks < 6)[0]) / len(ranks)
+    r10 = 100.0 * len(numpy.where(ranks < 11)[0]) / len(ranks)
+    medr = numpy.floor(numpy.median(ranks))
+    meanr = ranks.mean() 
+    
+    return  (r1+r5+r10+medr), (r1, r5, r10, medr)
